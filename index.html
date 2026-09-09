@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="안녕하세요! 프론트엔드 개발자 박규영의 포트폴리오입니다." />
+  <meta property="og:title" content="박규영 | Frontend Developer" />
+  <meta property="og:description" content="React, JavaScript를 사랑하는 개발자입니다." />
+  <meta property="og:type" content="website" />
+
+  <title>박규영 | Portfolio</title>
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.2.0/css/all.min.css"
+  />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- JavaScript -->
+  <script src="js/main.js" defer></script>
+</head>
+
+<body>
+  <!-- ==================== HEADER ==================== -->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <!-- 로고 -->
+      <a href="#hero" class="nav__logo" aria-label="홈으로 이동">
+        <i class="fa-solid fa-code"></i>
+        <span>박규영</span>
+      </a>
+
+      <!-- 네비게이션 메뉴 -->
+      <ul class="nav__menu" id="navMenu" role="list">
+        <li><a href="#about"    class="nav__link">About</a></li>
+        <li><a href="#skills"   class="nav__link">Skills</a></li>
+        <li><a href="#projects" class="nav__link">Projects</a></li>
+        <li><a href="#contact"  class="nav__link">Contact</a></li>
+      </ul>
+
+      <!-- 우측 액션 버튼들 -->
+      <div class="nav__actions">
+        <!-- 테마 토글 -->
+        <button
+          class="btn-theme"
+          id="themeToggle"
+          aria-label="다크모드 전환"
+        >
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+
+        <!-- 햄버거 메뉴 (모바일) -->
+        <button
+          class="btn-hamburger"
+          id="hamburger"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="hero" aria-label="소개">
+      <!-- 배경 장식 -->
+      <div class="hero__bg-circle hero__bg-circle--1" aria-hidden="true"></div>
+      <div class="hero__bg-circle hero__bg-circle--2" aria-hidden="true"></div>
+
+      <div class="hero__content">
+        <p class="hero__greeting">안녕하세요 👋</p>
+
+        <h1 class="hero__title">
+          저는 <span class="highlight">박규영</span>입니다
+        </h1>
+
+        <!-- 타이핑 효과 -->
+        <p class="hero__subtitle">
+          <span id="typingText"></span>
+          <span class="cursor" aria-hidden="true">|</span>
+        </p>
+
+        <div class="hero__buttons">
+          <a href="#projects" class="btn btn--primary">
+            <i class="fa-solid fa-folder-open"></i>
+            프로젝트 보기
+          </a>
+          <a href="#contact" class="btn btn--outline">
+            <i class="fa-solid fa-envelope"></i>
+            연락하기
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ABOUT ==================== -->
+    <section class="section" id="about" aria-label="소개">
+      <div class="container">
+        <h2 class="section__title fade-up">About Me</h2>
+
+        <div class="about__content fade-up">
+          <!-- 프로필 이미지 -->
+          <div class="about__image-wrap">
+            <img
+              src="images/profile.jpg"
+              alt="박규영 프로필 사진"
+              class="about__image"
+              width="200"
+              height="200"
+              loading="lazy"
+              onerror="this.src='https://placehold.co/200x200?text=Profile'"
+            />
+          </div>
+
+          <!-- 텍스트 -->
+          <div class="about__text">
+            <p>
+              안녕하세요! 사용자 경험을 중심으로 생각하는
+              <strong>프론트엔드 개발자 박규영</strong>입니다.
+              깔끔한 코드와 직관적인 UI를 만드는 것을 좋아합니다.
+            </p>
+            <p>
+              React와 JavaScript를 주력으로 사용하며, Java 및 Spring에 대한 이해도 갖추고 있습니다.
+              성능 최적화와 접근성에 관심이 많습니다.
+              새로운 기술을 배우고 팀과 함께 성장하는 것을 즐깁니다.
+            </p>
+
+            <ul class="about__info" role="list">
+              <li>
+                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                <span>대구, 대한민국</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+                <span>금오공과대학교 컴퓨터소프트웨어공학과 졸업</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+                <span>취업 준비 중 (2026)</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                <span>cloudsoswift@naver.com</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SKILLS ==================== -->
+    <section class="section skills" id="skills" aria-label="기술 스택">
+      <div class="container">
+        <h2 class="section__title fade-up">Skills</h2>
+
+        <ul class="skills__list" role="list">
+          <!-- 각 스킬 아이템 -->
+          <li class="skill-item fade-up">
+            <i class="fa-brands fa-html5 skill-item__icon" aria-hidden="true"></i>
+            <span class="skill-item__name">HTML5</span>
+          </li>
+          <li class="skill-item fade-up">
+            <i class="fa-brands fa-css3-alt skill-item__icon" aria-hidden="true"></i>
+            <span class="skill-item__name">CSS3</span>
+          </li>
+          <li class="skill-item fade-up">
+            <i class="fa-brands fa-js skill-item__icon" aria-hidden="true"></i>
+            <span class="skill-item__name">JavaScript</span>
+          </li>
+          <li class="skill-item fade-up">
+            <i class="fa-brands fa-typescript skill-item__icon" aria-hidden="true"></i>
+            <span class="skill-item__name">TypeScript</span>
+          </li>
+          <li class="skill-item fade-up">
+            <i class="fa-brands fa-react skill-item__icon" aria-hidden="true"></i>
+            <span class="skill-item__name">React</span>
+          </li>
+          <li class="skill-item fade-up">
+            <i class="fa-brands fa-node-js skill-item__icon" aria-hidden="true"></i>
+            <span class="skill-item__name">Node.js</span>
+          </li>
+          <li class="skill-item fade-up">
+            <i class="fa-brands fa-git-alt skill-item__icon" aria-hidden="true"></i>
+            <span class="skill-item__name">Git</span>
+          </li>
+          <li class="skill-item fade-up">
+            <i class="fa-solid fa-database skill-item__icon" aria-hidden="true"></i>
+            <span class="skill-item__name">SQL</span>
+          </li>
+          <li class="skill-item fade-up">
+            <i class="fa-brands fa-java skill-item__icon" aria-hidden="true"></i>
+            <span class="skill-item__name">Java</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ==================== PROJECTS ==================== -->
+    <section class="section" id="projects" aria-label="프로젝트">
+      <div class="container">
+        <h2 class="section__title fade-up">Projects</h2>
+
+        <!-- 필터 버튼 -->
+        <div
+          class="projects__filters fade-up"
+          id="projectFilters"
+          role="group"
+          aria-label="언어별 필터"
+        >
+          <button
+            class="filter-btn active"
+            data-filter="all"
+          >
+            전체
+          </button>
+          <!-- 나머지 버튼은 JS에서 동적 생성 -->
+        </div>
+
+        <!-- 프로젝트 카드 그리드 -->
+        <div
+          class="projects__grid"
+          id="projectsGrid"
+          aria-live="polite"
+          aria-label="프로젝트 목록"
+        >
+          <!-- JS에서 동적 렌더링 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+    <section class="section contact" id="contact" aria-label="연락처">
+      <div class="container">
+        <h2 class="section__title fade-up">Contact</h2>
+
+        <div class="contact__wrapper fade-up">
+          <!-- 연락처 정보 -->
+          <div class="contact__info">
+            <h3>함께 일해요! 🤝</h3>
+            <p>
+              새로운 기회나 협업 제안을 언제나 환영합니다.
+              아래 폼을 통해 메시지를 보내주시면
+              빠르게 답변드리겠습니다.
+            </p>
+
+            <ul class="contact__info-list" role="list">
+              <li>
+                <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                <span>hong@example.com</span>
+              </li>
+              <li>
+                <i class="fa-brands fa-github" aria-hidden="true"></i>
+                <a
+                  href="https://github.com/fromdance"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  github.com/fromdance
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 이메일 폼 (Formspree) -->
+          <form
+            class="contact__form"
+            id="contactForm"
+            action="https://formspree.io/f/maeylzrl"
+            method="POST"
+            novalidate
+          >
+            <!-- 이름 -->
+            <div class="form-group">
+              <label for="name">
+                이름 <span class="required" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="홍길동"
+                autocomplete="name"
+                required
+              />
+              <span class="error-msg" id="nameError" role="alert"></span>
+            </div>
+
+            <!-- 이메일 -->
+            <div class="form-group">
+              <label for="email">
+                이메일 <span class="required" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="hong@example.com"
+                autocomplete="email"
+                required
+              />
+              <span class="error-msg" id="emailError" role="alert"></span>
+            </div>
+
+            <!-- 메시지 -->
+            <div class="form-group">
+              <label for="message">
+                메시지 <span class="required" aria-hidden="true">*</span>
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                placeholder="안녕하세요! 협업 제안이 있어서 연락드립니다..."
+                required
+              ></textarea>
+              <span class="error-msg" id="messageError" role="alert"></span>
+            </div>
+
+            <!-- 전송 결과 메시지 -->
+            <div
+              class="form-success hidden"
+              id="formSuccess"
+              role="alert"
+            >
+              <i class="fa-solid fa-circle-check"></i>
+              메시지가 성공적으로 전송되었습니다! 감사합니다 😊
+            </div>
+
+            <div
+              class="form-error-global hidden"
+              id="formErrorGlobal"
+              role="alert"
+            >
+              <i class="fa-solid fa-circle-xmark"></i>
+              전송에 실패했습니다. 잠시 후 다시 시도해주세요.
+            </div>
+
+            <!-- 제출 버튼 -->
+            <button
+              type="submit"
+              class="btn btn--primary btn--full"
+              id="submitBtn"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+              보내기
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__copy">
+        © <span id="year"></span> 박규영. All rights reserved.
+      </p>
+
+              <div class="footer__social">
+          <a
+            href="https://github.com/fromdance"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub 프로필"
+          >
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+            GitHub
+          </a>
+          <a
+            href="mailto:hong@example.com"
+            aria-label="이메일 보내기"
+          >
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+            Email
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 스크롤 탑 버튼 -->
+  <button
+    class="scroll-top"
+    id="scrollTop"
+    aria-label="맨 위로 이동"
+  >
+    <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+  </button>
+</body>
+</html>
