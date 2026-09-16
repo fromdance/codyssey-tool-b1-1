@@ -578,7 +578,7 @@ function initImageReplacement() {
   // img 태그에 src를 기입해놓을 경우, 이 코드를 통해 eventListener를 달아주기 전에
   // 먼저 브라우저에서 이미지를 불러오고, 에러가 발생해 위 핸들러는 동작하지 않음.
   // 따라서, img 태그의 src를 제거한 뒤 이 js 코드에서 기입하는 형태로 변경.
-  image.src = 'images/profilejpg';
+  image.src = 'images/profile.jpg';
 }
 /* ============================================
    15. 초기화 - 모든 기능 실행
