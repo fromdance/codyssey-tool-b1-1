@@ -44,17 +44,23 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
    3. 다크모드 - 시스템 설정 감지 + 토글
    ============================================ */
 function initTheme() {
-  // ① 저장된 설정 우선, 없으면 시스템 설정 감지
+  // 1) 저장된 설정 우선, 없으면 시스템 설정 감지
   const saved = localStorage.getItem('theme');
+  // prefers-color-scheme: css 미디어 쿼리 속성 중 하나로,
+  // 사용자의 OS 설정 또는 User-Agent 설정에서 light 또는 dark 테마 중 어느것을 요청했는지 감지하는데 사용됨
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const initial = saved ?? (prefersDark ? 'dark' : 'light');
 
   applyTheme(initial);
 
-  // ② 시스템 테마 변경 실시간 감지 (저장된 설정 없을 때만)
+  // 2) 시스템 테마 변경 실시간 감지 (저장된 설정 없을 때만)
+  // Window.matchMedia(): 주어진 미디어쿼리 문자열에 대해, 해당 값이 일치하는지 및 변경 감지를 확인할 수 있는
+  // `MediaQueryList` 객체를 반환하는 메서드
   window.matchMedia('(prefers-color-scheme: dark)')
     .addEventListener('change', (e) => {
       if (!localStorage.getItem('theme')) {
+        // e.matches, 즉 현재 사용자의 설정이 `prefers-color-scheme: dark`와 동일한 경우
+        // 다크 모드로 설정, 그렇지 않은 경우 라이트 모드로 설정
         applyTheme(e.matches ? 'dark' : 'light');
       }
     });
@@ -85,6 +91,9 @@ function initScrollHeader() {
     header.classList.toggle('scrolled', window.scrollY > NAV_BACKGROUND_COLOR_CHANGE_Y);
     scrollTopBtn.classList.toggle('visible', window.scrollY > SCROLL_TOP_BUTTON_VISIBLE_Y);
   };
+  // `passive: true`: 터치 및 스크롤 이벤트 리스너에서 preventDefault를 절대 호출하지 않음을 나타내는 옵션
+  // 이를 통해, 기존에 이벤트 리스너에서 스크롤을 취소할지 모르므로 브라우저가 항상 이벤트 리스너가 완료되는 것을 기다린 뒤
+  // 스크롤을 처리하던 것을 방지
   window.addEventListener('scroll', onScroll, { passive: true });
 }
 
@@ -144,6 +153,7 @@ function initHamburger() {
    7. 부드러운 스크롤 (네비 링크)
    ============================================ */
 function initSmoothScroll() {
+  // `.btn[href^="#"]`: `btn` 클래스를 가지며, `href` 속성값이 `#`으로 시작하는 요소
   $$('.nav__link, .btn[href^="#"]').forEach((anchor) => {
     anchor.addEventListener('click', (e) => {
       const href = anchor.getAttribute('href');
@@ -154,6 +164,14 @@ function initSmoothScroll() {
 
       e.preventDefault();
 
+      // 이동할 Y좌표 위치 계산식
+      // [target.getBoundingClientRect().top]
+      // 뷰포트(현재 화면에서 보여지는 영역)에서 해당 요소(이동할 위치)의 상단(top)에 대해 상대적인 위치 정보
+      // (즉, 해당 요소의 상단이 뷰포트 최상단으로부터 얼마나 떨어져있는지)
+      // [getComputedStyle(document.documentElement).getPropertyValue('--nav-height')]
+      // `document.documentElement`의 모든 CSS를 담은 객체에서, `--nav-height` 속성값을 불러옴
+      // (`--nav-height`는 헤더 요소의 높이값)
+      // 이들을 합하면, `뷰포트 상단과 이동할 요소의 상단 차이값 + 현재 Y위치 - 네비게이션 바 높이`
       const offsetTop = target.getBoundingClientRect().top
         + window.scrollY
         - parseInt(getComputedStyle(document.documentElement)
@@ -168,11 +186,22 @@ function initSmoothScroll() {
    8. 스크롤 애니메이션 (IntersectionObserver)
    ============================================ */
 function initScrollAnimation() {
+  // IntersectionObserver: '대상 요소'와 `상위 요소(또는 최상위 문서의 뷰포트)` 간의 교차 영역 변화를 비동기적으로 감지하는 API
+  // (현재 코드에서는 별도로 root를 지정하지 않았으므로, 브라우저의 뷰포트를 디폴트로 사용)
+  // IntersectionObserver가 생성되면, 지정된 가시성 비율(ratios of visibility)을 감지하도록 구성됨.
+  // `threshold`: observe된 요소의 '바운딩 박스 영역'과 '교차 영역'의 비율을 나타내는 값
+  // (즉, 현재 요소가 몇 퍼센트나 보여지고 있는지)
+
   const observer = new IntersectionObserver(
+    // 아래 callback 함수는 대상 요소의 가시 영역 비율이 임계값을 넘었을때 호출됨
     (entries) => {
       entries.forEach((entry) => {
+        // entry = IntersectionObserverEntry 객체로, 임계값보다 가시성이 증가 또는 감소하여 임계값을 넘어간
+        // 각 요소들과 관련 정보(교차 여부/비율, 타겟 요소 등)를 담고있는 객체
         if (entry.isIntersecting) {
+          // 해당 요소가 교차한 경우, (즉, 뷰포트에 해당 요소가 20% 나온 경우)
           // 카드마다 순서대로 딜레이 적용
+          // (SKILLS의 각 카드에 대해, 각 카드의 순서(index)별로 스크롤 애니메이션 딜레이를 달리 적용)
           const siblings = [...entry.target.parentElement.children];
           const index = siblings.indexOf(entry.target);
           entry.target.style.transitionDelay = `${index * 0.08}s`;
@@ -210,15 +239,18 @@ function initTyping() {
   const PAUSE_START    = 400;  // 삭제 후 대기 (ms)
 
   function type() {
-    const current = texts[textIndex];
+    // 문자열의 각 문자를 나누어 배열에 담아 처리
+    // 기존에는 문자열을 바로 slice 했으나, 이모지의 경우 javascript string에서 길이가 2이므로 잘라버리면
+    // 대체 문자가 출력되는 문제가 있어, 각 문자를 배열에 나눠 담은 뒤, 범위 내 요소들을 join하여 출력하는 것으로 변경함.
+    const current = [...texts[textIndex]];
 
     if (isDeleting) {
       // 삭제 중
-      typingText.textContent = current.slice(0, charIndex - 1);
+      typingText.textContent = current.slice(0, charIndex - 1).join('');
       charIndex--;
     } else {
       // 타이핑 중
-      typingText.textContent = current.slice(0, charIndex + 1);
+      typingText.textContent = current.slice(0, charIndex + 1).join('');
       charIndex++;
     }
 
@@ -380,9 +412,10 @@ function escapeHtml(str) {
 }
 
 /* ============================================
-   12. 언어별 필터링
+   12. 프로젝트 언어별 필터링
    ============================================ */
 function buildFilterButtons(projects) {
+  // PROJECTS의 각 프로젝트의 주요 언어들을 추출하여 주요 언어 별로 프로젝트를 필터링 할 수 있는 버튼들을 생성
   // 언어 목록 추출 (중복 제거)
   const languages = [
     ...new Set(
@@ -403,10 +436,11 @@ function buildFilterButtons(projects) {
 
   // 필터 버튼 클릭 이벤트 (이벤트 위임)
   projectFilters.addEventListener('click', (e) => {
+    // `closest(CSS선택자)`: 요소 자신부터 시작해 상위부모 방향으로, 지정된 CSS 선택자와 일치하는 가장 가까운 조상요소 찾는 메서드
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
 
-    // active 클래스 이동
+    // active 클래스 이동 (기존에 active된 버튼은 active 없애고, 현재 클릭된 버튼 active)
     $$('.filter-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
 
@@ -428,6 +462,7 @@ function buildFilterButtons(projects) {
 function initContactForm() {
   if (!contactForm) return;
 
+  // 폼의 각 input 및 에러 메시지 요소
   const fields = {
     name:    { el: $('#name'),    error: $('#nameError') },
     email:   { el: $('#email'),   error: $('#emailError') },
@@ -454,13 +489,14 @@ function initContactForm() {
 
     if (!isNameValid || !isEmailValid || !isMessageValid) return;
 
-    // 전송 중 UI
+    // 전송 중 UI (전송 버튼 비활성화 및 내부 텍스트 변경, 전송 성공/실패 텍스트 숨김)
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 전송 중...';
     formSuccess.hidden = true;
     formErrorGlobal.hidden = true;
 
     try {
+      // 설정된 form action(Formspree API)으로 요청 전송
       const res = await fetch(contactForm.action, {
         method: 'POST',
         body: new FormData(contactForm),
@@ -488,7 +524,7 @@ function initContactForm() {
   });
 }
 
-/* 개별 필드 유효성 검사 */
+/* 폼 개별 필드 유효성 검사 */
 function validateField(el, errorEl) {
   let message = '';
 
@@ -501,6 +537,8 @@ function validateField(el, errorEl) {
   }
 
   if (el.id === 'email') {
+    // 이메일 검사 정규식
+    // [공백 또는 @이 아닌 문자 1개 이상] + [@] + [공백 또는 @이 아닌 문자 1개 이상 ] + [.] + [공백 또는 @이 아닌 문자 1개 이상]
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!el.value.trim()) {
       message = '이메일을 입력해주세요.';
@@ -517,6 +555,7 @@ function validateField(el, errorEl) {
     }
   }
 
+  // 에러 메시지 있는 경우, 해당 필드에 에러 표시
   if (message) {
     el.classList.add('invalid');
     errorEl.textContent = message;
@@ -529,7 +568,20 @@ function validateField(el, errorEl) {
 }
 
 /* ============================================
-   14. 초기화 - 모든 기능 실행
+   14. 이미지 불러오기 오류시 대체 이미지 설정
+   ============================================ */
+function initImageReplacement() {
+  const image = $('.about__image')
+  image.addEventListener('error', (e) => {
+    image.src = 'https://placehold.co/200x200?text=Profile';
+  }, {once: true});
+  // img 태그에 src를 기입해놓을 경우, 이 코드를 통해 eventListener를 달아주기 전에
+  // 먼저 브라우저에서 이미지를 불러오고, 에러가 발생해 위 핸들러는 동작하지 않음.
+  // 따라서, img 태그의 src를 제거한 뒤 이 js 코드에서 기입하는 형태로 변경.
+  image.src = 'images/profilejpg';
+}
+/* ============================================
+   15. 초기화 - 모든 기능 실행
    ============================================ */
 function init() {
   initTheme();
@@ -539,6 +591,7 @@ function init() {
   initScrollAnimation();
   initTyping();
   initContactForm();
+  initImageReplacement();
   fetchProjects();
 }
 

@@ -1,5 +1,5 @@
 /* ============================================
-   1. CSS 변수 - 라이트 모드
+   1. CSS 변수 - 라이트 모드(디폴트)
    ============================================ */
 :root {
   /* 색상 */
@@ -35,6 +35,7 @@
   /* 기타 */
   --radius:     0.5rem;
   --radius-lg:  1rem;
+  /* 요소의 변화가 0.3초동안 ease(처음/마지막엔 느리고 중간에 빨라지는 형태)로 진행됨 */
   --transition: 0.3s ease;
   --nav-height: 64px;
 }
@@ -53,9 +54,10 @@
 }
 
 /* ============================================
-   3. 리셋 & 기본
+   3. 리셋 & 기본 (모든 요소의 마진, 패딩 0으로 초기화 및 box-sizing 설정)
    ============================================ */
 *, *::before, *::after {
+  /* border-box: 테두리 및 안쪽 여백 크기도 요소의 크기로 고려*/
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -179,6 +181,7 @@ button { font-family: var(--font-base); }
    5. HEADER / NAV (모바일 퍼스트)
    ============================================ */
 .header {
+  /* 헤더를 다른 요소와 상관없이 최상단 고정시키기 위해 fixed로 설정 */
   position: fixed;
   top: 0;
   left: 0;
@@ -195,6 +198,7 @@ button { font-family: var(--font-base); }
 }
 
 .nav {
+  /* 가로 한 줄로 요소들(로고, 메뉴목록, 테마토글버튼)을 나열하기 때문에 flexbox */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -212,7 +216,9 @@ button { font-family: var(--font-base); }
   z-index: 1001;
 }
 
-/* 모바일: 메뉴 숨김 */
+/* 네비게이션 메뉴 (디폴트를 모바일 버전으로 설정. 즉, 메뉴 숨김(`right: -100%`))
+  가로 한 줄로 각 링크들(nav__link)을 나열하기 때문에 flexbox
+  모바일에서는 위에서 아래로 메뉴 표시하므로 `flex-direction: column` */
 .nav__menu {
   display: flex;
   flex-direction: column;
@@ -242,6 +248,8 @@ button { font-family: var(--font-base); }
   position: relative;
 }
 
+/* 네비게이션 링크 호버시 아래에 표시되는 밑줄 
+  호버 전에는 width 0이었다가, 호버 되면 width 100%(밑줄 생김) */
 .nav__link::after {
   content: '';
   position: absolute;
@@ -262,6 +270,7 @@ button { font-family: var(--font-base); }
 }
 
 .nav__actions {
+  /* 액션 버튼들(테마토글버튼, 햄버거버튼)은 가로 한 줄로 나열하기 때문에 flexbox */
   display: flex;
   align-items: center;
   gap: var(--space-sm);
@@ -303,6 +312,7 @@ button { font-family: var(--font-base); }
   z-index: 1001;
 }
 
+/* 햄버거 버튼 아이콘을 구성하는 각 줄 */
 .btn-hamburger span {
   display: block;
   width: 24px;
@@ -312,7 +322,9 @@ button { font-family: var(--font-base); }
   transition: transform var(--transition), opacity var(--transition);
 }
 
-/* 햄버거 → X 변환 */
+/* 햄버거 → X 변환 
+  햄버거 아이콘의 첫, 셋째 줄을 기울여 X 모양을 만듦(둘째 줄은 안보이게 처리)
+*/
 .btn-hamburger.active span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
 }
@@ -340,6 +352,7 @@ button { font-family: var(--font-base); }
    6. HERO
    ============================================ */
 .hero {
+  /* 디스플레이 크기에 상관없이, 한 화면에 꽉차게 높이 설정*/
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -441,6 +454,7 @@ button { font-family: var(--font-base); }
    7. ABOUT
    ============================================ */
 .about__content {
+  /* '좌측 프로필 이미지', '우측 설명 텍스트'를 가로로 나란히 배치하므로 flexbox 사용*/
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
@@ -492,7 +506,14 @@ button { font-family: var(--font-base); }
 }
 
 .skills__list {
+  /* 스킬 목록은 가짓수가 많으므로 2차원 테이블 형태로 배치해야 하고,
+  화면 크기에 맞춰 자동으로 열 개수가 바뀌도록 하기 위해 grid 사용
+  (+ 아래에서 동일 패턴 반복 배치를 위해 사용한 `repeat`, `minmax`와 같은 요소가 grid에만 있다는 점도 이유 중 하나)*/
   display: grid;
+  /* repeat: 트랙(grid 내 요소) 목록에서 반복되는 패턴을 간결한 형태로 표시할 수 있도록 해주는 함수
+  auto-fit: 최소/최대 크기가 지정된 콘텐츠 박스가 넘치지않는 범위 내에서 가능한 반복 횟수만큼 반복함(한 줄마다)
+  그리고 그리드 항목 배치 후, 빈 반복 트랙은 감춤
+  minmax(min, max): min이상 max이하인 크기 범위를 설정  */
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: var(--space-lg);
 }
@@ -531,6 +552,7 @@ button { font-family: var(--font-base); }
    9. PROJECTS
    ============================================ */
 .projects__filters {
+  /* 필터 버튼들은 가로 한 줄로 나열하므로 flexbox 선택*/
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
@@ -558,6 +580,8 @@ button { font-family: var(--font-base); }
 }
 
 .projects__grid {
+  /* 스킬 카드 목록과 마찬가지로, 프로젝트 카드 목록 역시 테이블 형태의 2차원 격자로 배치할 것이므로
+  Grid 사용*/
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--space-lg);
@@ -569,6 +593,7 @@ button { font-family: var(--font-base); }
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
+  /* 카드 내부 요소들(헤더, 설명, 메타 등)은 위->아래 배치(세로 한 축)로 나열할 것이므로 flexbox 사용 */
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
@@ -716,6 +741,8 @@ button { font-family: var(--font-base); }
 }
 
 .contact__wrapper {
+  /* 연락 관련 텍스트, 연락 폼을 한 축에 나란히 배치하므로 flexbox
+  여기서는 모바일 배치를 디폴트 값으로 했기 때문에, 위->아래 배치를 위해 flex-direciton: column 사용*/
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
@@ -858,6 +885,7 @@ button { font-family: var(--font-base); }
 }
 
 .footer .container {
+  /* 푸터 배치는 모바일을 디폴트로 설정하여, 세로 한 축으로 요소들 나열하기 위해 flexbox */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -931,11 +959,12 @@ button { font-family: var(--font-base); }
    13. 반응형 - 태블릿 (768px 이상)
    ============================================ */
 @media (min-width: 768px) {
-  /* 네비 */
+  /* 네비게이션 메뉴 보여주고, 햄버거 버튼은 감춤 */
   .btn-hamburger { display: none; }
 
   .nav__menu {
     position: static;
+    /* 태블릿 크기 이상의 화면에서는 메뉴 가로로 나열*/
     flex-direction: row;
     width: auto;
     height: auto;
@@ -949,7 +978,7 @@ button { font-family: var(--font-base); }
     font-size: var(--font-size-base);
   }
 
-  /* About */
+  /* About도 태블릿 크기 이상 화면에서는 가로로 나열(이미지, 설명을 가로로 나열) */
   .about__content {
     flex-direction: row;
     align-items: flex-start;
@@ -974,7 +1003,7 @@ button { font-family: var(--font-base); }
     flex: 1.5;
   }
 
-  /* Footer */
+  /* Footer 모바일에서 2줄로 나열하던 것 가로 한 줄로 나열하되, 요소들(카피라이트 설명, 깃허브/이메일 버튼)을 좌우 끝에 배치 */
   .footer .container {
     flex-direction: row;
     justify-content: space-between;
