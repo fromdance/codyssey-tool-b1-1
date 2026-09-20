@@ -86,7 +86,82 @@ AI 도구 학습 - B1-1: 나를 소개하는 웹페이지 처음부터 만들기
       - `onXYZ`(ex. `onerror`) 속성을 사용하는 것과 달리, 리스너가 활성화되는 단계(캡처링, 버블링)를 세밀하게 제어할 수 있음
         - `option` 중 `capture` 옵션을 `true`로 줄 경우, DOM 트리 상에서 아래에 있는 `이벤트 타겟`에게 전달되기 전에 이 리스너에게 먼저 전달됨(캡처링) [#](https://ko.javascript.info/bubbling-and-capturing#ref-311)
         - 만약 해당 옵션을 주지 않았다면, 리스너는 `버블링 단계`에서 동작(리스너가 설정된 요소 및 그 하위 요소에서 이벤트 발생해, 위로 전파될 때 감지)
-      - `HTML`, `SVG` 요소 뿐만 아니라, 모든 Event Target에 동작함([Document](https://developer.mozilla.org/en-US/docs/Web/API/Document), [Window](https://developer.mozilla.org/en-US/docs/Web/API/Window) 등)
+      - `HTML`, `SVG` 요소 뿐만 아니라, 모든 `Event Target`에 동작함([Document](https://developer.mozilla.org/en-US/docs/Web/API/Document), [Window](https://developer.mozilla.org/en-US/docs/Web/API/Window) 등)
 - 화살표 함수, 구조분해 할당, 배열 메서드(map/filter)가 왜 필요하고 어떻게 사용하는지 설명할 수 있다.
+  - `화살표 함수 표현식`
+    - `ES6(ES2015)`에 등장한 문법으로, 기존 함수 표현식 대비 간결하게 함수를 선언할 수 있음
+    - 또한, 다음과 같은 차이가 있음 (아래 내용은 화살표 함수의 특징) [#](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
+      - `this`, `arguments`, `super`에 대한 바인딩을 가지지 않으며, 메서드로 사용되지 못함
+        - `화살표 함수 표현식`의 경우, `this`가 바깥 context에 바인딩된 `this`를 따름(`렉시컬 바인딩`: 함수 선언 위치 기준으로 [클로저(함수와 그 함수를 둘러싼 상태)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures) 지정) [#](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
+        - 반면, `함수 표현식`은 `런타임 바인딩`임. 어떻게 정의되었는지 뿐만 아니라, 어떻게 호출되었는지에 따라 결정됨.
+          ```javascript
+          const abc = () => { console.log(this) };
+          function fabc() {
+              console.log(this);
+          }
+          const obj = { f: abc};
+          const fobj = { f: fabc }
+          obj.f(); // Window
+          fobj.f(); // Object {f: Function}
+          ```
+          - 가령, 똑같이 `this`에 접근하는 함수 표현식이어도, *독립된 함수에서는* **전역 객체**를, *객체의 메서드로 호출될 때*는 **해당 객체**를 가리킴
+          - [Function.call()], [Function.apply()]을 통해 특정 호출에 대한 `this`값을 설정하거나, [Function.bind()]를 통해 `this` 바인딩이 변경되지 않는 함수를 생성할 수 있음.
+      - 생성자로 사용할 수 없음(즉, `new` 키워드와 함께 사용할 수 없음)
+      - 함수 내에서 `yield` 키워드를 사용할 수 없고, 따라서 제너레이터 함수로 생성될 수 없음
+    - 함수 선언은 호이스팅되어, 스코프 내 최상단 위치로 선언이 끌어올려짐.
+      - `var`/`let`/`const`로 선언된 화살표 함수 역시 호이스팅 되지만, 실제 선언문에 도달하기 전에 함수를 호출할 경우 undefined 또는 에러 발생
+    - 현재 코드에서는, `this` 바인딩을 이유로 `화살표 함수 표현식`을 사용함
+      - 특히, **이벤트 리스너 함수**로 사용했는데, 이를 통해 `this`가 `이벤트를 트리거 하는 요소`가 아닌, 주변 범위의 `this`를 상속 받도록 함.
+        - 이를 통해 `상태 객체(state)`, `변수로 선언해놓은 요소` 등 최상단 스코프에 선언된 객체들을 접근할 수 있음.
+  - `구조분해 할당` [#](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring)
+    - 배열의 `값`, 또는 객체의 `속성`을 개별 변수로 분리해 할당할 수 있게 해주는 구문
+    - 데이터를 수신하는 위치(할당문의 `left value` 또는 새 식별자 바인딩 생성 위치)에서 사용할 수 있음
+    - 현재 코드에서는, 객체 내에서 특정 프로퍼티를 추출해내어, 매번 참조할 프로퍼티가 있는 객체 이름을 앞에 붙이는 불편함을 덜음.
+  - `배열 메서드`
+    - 배열에는 [map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map), [filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter), [reduce()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) 등 다양한 인스턴스 메서드를 갖고 있음.
+      - `map(callbackFn)`
+        - 배열 내 요소들에 대해, 지정된 함수를 호출한 결과를 담아 새로운 배열을 생성
+      - `filter(callbackFn)`
+        - 배열 내 요소들에 대해, 제공된 `함수(callbackFn)`가 구현하는 조건을 충족하는 요소만 선별한 `얕은 복사본`을 생성
+      - `reduce(callbackFn)`
+        - 배열 내 요소들에 대해, 지정된 `리듀서 함수`를 순서대로 실행하여, 이전 요소에 대한 계산 결과 값을 매개변수로 전달하며 연산을 실행한 결과값을 생성
+    - 이러한 구문을 사용하면, 해당 로직들을 직접 구현하는 불편함을 덜 수 있고, 코드 가독성도 더 높일 수 있음.
 - `fetch`와 `async/await`로 비동기 데이터를 가져오고, 로딩/성공/실패 상태를 UI로 어떻게 표현했는지 설명할 수 있다.
+  - 비동기로 데이터 불러오기
+    - 현재 코드에서는 `fetch()`를 사용해 `Github API`, `Formspree` 등 외부 API와 통신하고 있음
+    - `fetch` [#](https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch)
+      - 기존에 Javascript 기반의 비동기 통신 API였던 [XHR(XMLHttpRequest)](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest_API)를 대체하는 API로, `이벤트` 기반의 `XHR`와 달리, `Promise`를 사용하며, `CORS`와 같은 고급 기능을 제공함
+        - [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise): `Promise`가 생성될 당시, 알려지지 않았을 수도 있는 값을 나타내는 프록시 객체. 당장 값을 반환할 수 없는 비동기 메서드들은 최종 값을 즉시 반환하는 대신, 미래의 어느 한 시점에서 결과 값을 제공할 `Promise`를 대신 반환함.
+          ```javascript
+          const myPromise = new Promise((resolve, reject) => {
+            ...
+            if(error) reject("error");
+            else resolve("abc");
+          });
+          ```
+          - `Promise`는 `Pending(보류중)`, `Fufilled(승인됨)`, `Rejected(거부됨)` 세 가지 상태를 가지며, 값이 반환된 경우는 `Fulfilled(Promise.then())`, 거절된 경우 이유와 함께 `Rejected(Promise.then().catch())` 됨.
+    - `async/await` [#](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
+      - ES2018에서 도입된 문법으로, 여러 `Promise`간의 흐름을 순서대로, 즉 동기적인 순서로 진행하는 함수를 만들 수 있음
+        - `new Promise(...)` 내부의 코드는 `Promise`가 생성됨과 동시에 실행되므로, 기존의 코드로는 이러한 순서를 지키는게 거의 불가능함.
+      - `async function`은 0개 이상의 `await` 키워드를 포함할 수 있는데, `await`가 달린 `Promise`를 만나게 되면, 해당 `Promise`가 이행/거부될 때까지 함수 실행을 일시 중단하며, 처리가 된 뒤 다시 진행함.
+    - 현재 코드에서는, `요청 전송 -> 결과 수신 -> 결과를 바탕으로 성공/실패 UI 갱신` 을 위해 `fetch` 및 `async/await` 구문을 사용함
 - "하나의 기능"을 만들기 위해 이벤트 → 상태 변경 → DOM 업데이트가 어떻게 연결되는지 설명할 수 있다. (React의 상태-렌더링 흐름의 기초)
+  1. DOM 요소들과 유저의 상호작용으로 `click`, `keydown` 등의 이벤트가 발생한다.
+  2. 해당 DOM 요소에, 해당 이벤트 발생시 트리거되는 이벤트 리스너가 동작한다.
+  3. 이벤트 리스너는 Javascript 변수로 관리되는 상태 값을 변경시킨다.
+  4. 변경된 상태값을 기반으로 DOM을 업데이트 하는 코드들을 실행한다.
+     1. DOM의 클래스를 업데이트시켜, CSS 스타일 값이 변하게 한다.
+        ```javascript
+        ...
+        navMenu.classList.add('active');
+        ``` 
+     2. `innerHTML`, `textContent` 등의 요소를 수정하여 DOM 내용을 직접 변경한다.
+        ```javascript
+        ...
+        if (isDeleting) {
+          // 삭제 중
+          typingText.textContent = current.slice(0, charIndex - 1).join('');
+          charIndex--;
+        }
+        ...
+        ```

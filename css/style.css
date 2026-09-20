@@ -82,6 +82,10 @@ button { font-family: var(--font-base); }
 /* ============================================
    4. 공통 유틸리티
    ============================================ */
+
+body.modal-open {
+  overflow: hidden;
+}
 .container {
   width: 100%;
   max-width: 1100px;

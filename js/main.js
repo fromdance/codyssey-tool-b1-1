@@ -115,19 +115,19 @@ function initHamburger() {
 
   function openMenu() {
     state.isMenuOpen = true;
-    navMenu.classList.toggle('active');
-    hamburger.classList.toggle('active');
-    overlay.classList.toggle('active');
-    document.body.style.overflow = 'hidden';
+    navMenu.classList.add('active');
+    hamburger.classList.add('active');
+    overlay.classList.add('active');
+    document.body.classList.add('modal-open');
     hamburger.setAttribute('aria-label', '메뉴 닫기');
   }
 
   function closeMenu() {
     state.isMenuOpen = false;
-    navMenu.classList.toggle('active');
-    hamburger.classList.toggle('active');
-    overlay.classList.toggle('active');
-    document.body.style.overflow = '';
+    navMenu.classList.remove('active');
+    hamburger.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.classList.remove('modal-open');
     hamburger.setAttribute('aria-label', '메뉴 열기');
   }
 
@@ -204,7 +204,7 @@ function initScrollAnimation() {
           // (SKILLS의 각 카드에 대해, 각 카드의 순서(index)별로 스크롤 애니메이션 딜레이를 달리 적용)
           const siblings = [...entry.target.parentElement.children];
           const index = siblings.indexOf(entry.target);
-          entry.target.style.transitionDelay = `${index * 0.08}s`;
+          // entry.target.style.transitionDelay = `${index * 0.08}s`;
           entry.target.classList.add('visible');
           observer.unobserve(entry.target); // 한 번만 실행
         }
@@ -351,7 +351,7 @@ function renderProjects(projects) {
   // 새로 생성된 카드에 스크롤 애니메이션 적용
   $$('.project-card').forEach((card, i) => {
     card.classList.add('fade-up');
-    card.style.transitionDelay = `${i * 0.08}s`;
+    // card.style.transitionDelay = `${i * 0.08}s`;
 
     // 이미 화면에 보이면 바로 visible
     setTimeout(() => card.classList.add('visible'), 50);
